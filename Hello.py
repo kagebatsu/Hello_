@@ -12,14 +12,38 @@ class Hello:
     
     def __init__(self, name):
         self.user_name    = (name)
+        self.tagset       = []
         self.wordprint    = {}
-        self.noveltyscore = []
+        self.noveltyscore = 0.0
+        self.noveltyprint = []
         self.mlen_sum     = 0
         self.total_msgs   = 0
         self.current_mess = 0
         print('Created Hello profile for ' + self.user_name)
         ## store the summed length of all messages (mlen_sum)
         ## Store the total # of msgs   (total_msgs)
+    
+    def tag_message(self, message): 
+        
+        '''tag each message with a possible function'''
+        
+        response = ['ok', 'k', 'yeah', 'sure', 'right']
+        greeting = ['hey', 'hello', 'hi', 'sup', 'yo']
+        goodbye  = ['see ya', 'bye', 'later']
+        thanks   = ['ty', 'thanks']
+        #question = ['?']
+        
+        for word in message:
+            if word in response:
+                return self.tagset.append([message, 'response'])
+            if word in greeting:
+                return self.tagset.append([message, 'greeting'])
+            if word in goodbye:
+                return self.tagset.append([message, 'goodbye'])
+            if word in thanks: 
+                return self.tagset.append([message, 'thanks'])
+            if word not in response or greeting: 
+                return self.tagset.append([message, 'statement'])
         
     def average(self):
         
@@ -38,7 +62,7 @@ class Hello:
         novelty = (novelty / self.current_mess)
         ## take the number of novel words  
         ## and divide by the total words in the message.
-        self.noveltyscore.append(message, novelty)
+        self.noveltyprint.append([message, novelty])
         
         return novelty 
     
@@ -68,7 +92,7 @@ class Hello:
             for word in self.wordprint.keys():
                 print(word + ' ' + str(self.wordprint[word]))
             print('NOVELTY CHART')
-            print(self.noveltyscore)
+            print(self.noveltyprint)
     
     def says(self, message):
         message = self.preprocess(message)
@@ -77,6 +101,8 @@ class Hello:
         self.total_msgs  += 1
         self.noveltyscore = self.novelty(message)
         self.update_wordprint(message)
+        self.tag_message(message)
+        print('MESSAGE TYPE: ' + (self.tagset[-1][1]))
         print('NOVELTY: ' + str(self.noveltyscore) + ' Scores close to 1 represent novel conversation.')
         
         # read_message updates mlen == the length of the message it takes as arg
