@@ -31,6 +31,8 @@ class Hello:
         print('words per message: '  + str(self.average()))
         print('total messages' + ' ' + str(self.total_msgs))
     
+    def wordprint(self, message):
+        
     def says(self, message):
         self.mlen_sum += len(message.split())
         self.total_msgs  += 1
